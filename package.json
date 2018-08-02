@@ -1,0 +1,59 @@
+{
+  "name": "fs-intensive-project",
+  "version": "1.0.0",
+  "description": "starting point code for application being built to in FS intensive course",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently --kill-others \"webpack --watch\" \"nodemon src/server/index\"",
+    "start:server": "nodemon src/server/index",
+    "heroku-postbuild": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coding-boot-camp/fs-intensive-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coding-boot-camp/fs-intensive-project/issues"
+  },
+  "homepage": "https://github.com/coding-boot-camp/fs-intensive-project#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "nforce": "^1.10.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-feather": "^1.1.0",
+    "reactstrap": "^6.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "bootstrap": "^4.1.1",
+    "concurrently": "^3.5.1",
+    "dotenv": "^6.0.0",
+    "nodemon": "^1.17.5",
+    "webpack": "^4.12.1",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react",
+      "stage-3"
+    ]
+  }
+}
