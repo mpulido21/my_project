@@ -4,24 +4,25 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 const KudosForm = props => (
   <Form>
     <FormGroup>
-    <Label>Give Kudos from</Label>
+      {/* <Label>USER</Label> */}
       <Input type="select" onChange={props.updateSender}>
-        <option>Please select a Sender!</option>
+        <option>WHO</option>
         {props.users.map(element => <option>{element.name}</option>)}
       </Input>
-      <Label>Give Kudos to</Label>
+      {/* <Label>TYPE</Label> */}
+      <br />
       <Input type="select" onChange={props.updateReceiver}>
-      <option>Please select a Receiver!</option>
+        <option>WHAT</option>
         {props.users.map(element => <option>{element.name}</option>)}
       </Input>
     </FormGroup>
     <FormGroup>
-      <Input type="text" placeholder="Kudos Title" onChange={props.updateTitle}/>
+      <Input type="text" placeholder="COUNT" onChange={props.updateTitle} />
     </FormGroup>
     <FormGroup>
-      <Input 
-        type="textarea" 
-        placeholder="Kudos text"
+      <Input
+        type="textarea"
+        placeholder="COMMENT"
         onChange={props.updateComment}
       />
     </FormGroup>
