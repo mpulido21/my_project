@@ -1,23 +1,25 @@
 import React from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 
-const KudosForm = props => (
+const IpForm = props => (
   <Form>
     <FormGroup>
-      {/* <Label>USER</Label> */}
-      <Input type="select" onChange={props.updateSender}>
+      <Input type="select" onChange={props.updateTiuser}>
         <option>WHO</option>
         {props.users.map(element => <option>{element.name}</option>)}
       </Input>
-      {/* <Label>TYPE</Label> */}
       <br />
-      <Input type="select" onChange={props.updateReceiver}>
-        <option>WHAT</option>
-        {props.users.map(element => <option>{element.name}</option>)}
-      </Input>
+      <Input
+        type="text"
+        placeholder="TYPE"
+        onChange={props.updateType}
+      />
     </FormGroup>
     <FormGroup>
-      <Input type="text" placeholder="COUNT" onChange={props.updateTitle} />
+      <Input type="text"
+        placeholder="COUNT"
+        onChange={props.updateCount}
+      />
     </FormGroup>
     <FormGroup>
       <Input
@@ -27,9 +29,9 @@ const KudosForm = props => (
       />
     </FormGroup>
     <FormGroup>
-      <Button onClick={props.postData}> Submit </Button>
+      <Button onClick={props.postData} color="warning"> Submit </Button>
     </FormGroup>
   </Form>
 )
 
-export default KudosForm;
+export default IpForm;

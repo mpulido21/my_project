@@ -13,7 +13,7 @@ const salesForceLoginInfo = {
     password: 'student1t4knpcaLF3q8PSgzx7p5hGf9'
 }
 
-const salesForceQueryFunction = (conn, loginInfo) => async (query) =>{
+const salesForceQueryFunction = (conn, loginInfo) => async (query) => {
     // Determine if the application is connected to the
     // salesForce server, if not, login and wait for
     // the connection to succeed
@@ -26,26 +26,26 @@ const salesForceQueryFunction = (conn, loginInfo) => async (query) =>{
     return conn.query({ query });
 }
 
+const createImprovements = (conn, loginInfo) => async (insertObj) => {
+    // Determine if the application is connected to the
+    // salesForce server, if not, login and wait for
+    // the connection to succeed
+    if (!conn.oauth) {
+        await conn.authenticate(loginInfo);
+    }
 
-const createKudos = (conn, loginInfo) => async (insertObj) => {
-  // Determine if the application is connected to the
-  // salesForce server, if not, login and wait for
-  // the connection to succeed
-  if (!conn.oauth) {
-    await conn.authenticate(loginInfo);
-  }
+    const newImprovements = nforce.createSObject('Improvement__c');
+    newImprovements.set('Comment__c', insertObj.Comment__c);
+    newImprovements.set('Count__c', insertObj.Count__c);
+    newImprovements.set('Tiny_Improvements_User__c', insertObj.Tiny_Improvements_User__c);
+    newImprovements.set('Type__c', insertObj.Type__c);
 
-  const newKudos = nforce.createSObject('Kudos__c');
-  newKudos.set('Comment__c', insertObj.Comment__c);
-  newKudos.set('Name', insertObj.Name);
-  newKudos.set('Receiver__c', insertObj.Receiver__c);
-  newKudos.set('Sender__c', insertObj.Sender__c);
-
-  return conn.insert({ sobject: newKudos });
+    return conn.insert({ sobject: newImprovements });
 }
 
 module.exports = {
     query: salesForceQueryFunction(salesForceConnection, salesForceLoginInfo),
-    createKudos: createKudos(salesForceConnection, salesForceLoginInfo)
+    // createKudos: createKudos(salesForceConnection, salesForceLoginInfo)
+    createImprovements: createImprovements(salesForceConnection, salesForceLoginInfo)
 };
 

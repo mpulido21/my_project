@@ -1,30 +1,56 @@
 import React, { Component } from "react";
-import { Col, Container, Row, Form, FormGroup, Input, Label, Button, Card, CardBody, Progress } from "reactstrap";
-import AwardCard from './components/AwardCard';
-// import AwardCard1 from './components/AwardCard1';
+import { Col, Container, Row, Form, FormGroup, Input, Label, Button, Card, CardBody, Progress, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import IpCard1 from './components/IpCard1';
+import IpForm from './components/IpForm';
 import axios from "axios";
-import KudosForm from './components/KudosForm';
 
 class App extends Component {
-  state = {
-    users: [],
-    awards: [],
-    sender: "",
-    receiver: "",
-    comment: "",
-    title: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      improvements: [],
+      tiuser: "",
+      type: "",
+      comment: "",
+      count: "",
+      filterUser: "",
+      modal: false
+    }
+    this.toggle = this.toggle.bind(this);
+  }
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+  updateFilter = event => {
+    this.setState({ filterUser: event.target.value });
+  };
+  getFilter = () => {
+    // axios.get("/api/filter/" + this.state.filterUser)
+    //   .then(response => {
+    //     console.log(response)
+    //   })
+    axios.get("/api/filter/" + this.state.filterUser)
+      .then(response => {
+        // console.log(response)
+        this.setState({
+          improvements: response.data
+        })
+      })
   }
 
-  updateSender = event => {
-    this.setState({ sender: event.target.value });
+  updateTiuser = event => {
+    this.setState({ tiuser: event.target.value });
   };
 
-  updateTitle = event => {
-    this.setState({ title: event.target.value });
+  updateType = event => {
+    this.setState({ type: event.target.value });
   };
 
-  updateReceiver = event => {
-    this.setState({ receiver: event.target.value });
+  updateCount = event => {
+    this.setState({ count: event.target.value });
   };
 
   updateComment = event => {
@@ -32,13 +58,14 @@ class App extends Component {
   };
 
   postData = () => {
-    if (this.state.title && this.state.comment && this.state.receiver && this.state.sender) {
-      axios.post("/api/kudos", {
-        Name: this.state.title,
+    if (this.state.tiuser && this.state.comment && this.state.type && this.state.count) {
+      axios.post("/api/improvement", {
+        Type__c: this.state.type,
         Comment__c: this.state.comment,
-        Receiver__c: this.state.users.find(user => user.name === this.state.receiver).id,
-        Sender__c: this.state.users.find(user => user.name === this.state.sender).id
+        Tiny_Improvements_User__c: this.state.users.find(user => user.name === this.state.tiuser).id,
+        Count__c: this.state.count
       }).then(response => {
+        this.setState({ modal: false })
         // this.setState({
         //   awards: response.data
         // })
@@ -47,10 +74,10 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    axios.get("/api/kudos")
+    axios.get("/api/improvement")
       .then(response => {
         this.setState({
-          awards: response.data
+          improvements: response.data
         })
       })
 
@@ -66,10 +93,10 @@ class App extends Component {
     return (
       <Container>
         <Row>
-          <Col md="12">
-            <h5>
-              acCOUNTable
-            </h5>
+          <Col body className="text-center">
+            <h1>
+              🚧 👷 🚧
+            </h1>
           </Col>
         </Row>
         <br />
@@ -77,22 +104,24 @@ class App extends Component {
           <Col md="12">
             <Card>
               <CardBody className="mx-auto">
-                <Button color="warning">TINY IMPROVEMENT</Button>{''}
+                <Button color="warning" onClick={this.toggle}>TINY IMPROVEMENT</Button>{''}
+                <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                  <ModalHeader toggle={this.toggle}>TINY IMPROVEMENT</ModalHeader>
+                  <ModalBody>
+                    <IpForm
+                      users={this.state.users}
+                      updateTiuser={this.updateTiuser}
+                      updateType={this.updateType}
+                      updateCount={this.updateCount}
+                      updateComment={this.updateComment}
+                      postData={this.postData}
+                    />
+                  </ModalBody>
+                  <ModalFooter>
+                  </ModalFooter>
+                </Modal>
               </CardBody>
             </Card>
-          </Col>
-        </Row>
-        <br />
-        <Row>
-          <Col md="12">
-            <KudosForm
-              users={this.state.users}
-              updateSender={this.updateSender}
-              updateReceiver={this.updateReceiver}
-              updateTitle={this.updateTitle}
-              updateComment={this.updateComment}
-              postData={this.postData}
-            />
           </Col>
         </Row>
         <br />
@@ -100,48 +129,35 @@ class App extends Component {
           <Col md="12">
             <Card>
               <CardBody className="mx-auto">
-                <Button color="warning">PROGRESS</Button>{''}
+                <Form>
+                  <FormGroup>
+                    <Input type="select" onChange={this.updateFilter}>
+                      <option> USER </option>
+                      {this.state.users.map(element => <option>{element.name}</option>)}
+                    </Input>
+                    <br />
+                    <Button color="warning" onClick={this.getFilter}>PROGRESS</Button>{''}
+                  </FormGroup>
+                </Form>
               </CardBody>
             </Card>
           </Col>
         </Row>
         <br />
         <Row>
-          <Col md="12" lg="4">
-            <Progress striped color="warning" value={75} />
+          <Col md="12">
+            <Progress striped color="warning" value={100} />
             <br />
-            {this.state.awards.map(elem => (
-              <AwardCard title={elem.name}
-                key={elem.id}
-                sender={elem.sender__r.Name}
-                receiver={elem.receiver__r.Name}
-                text={elem.comment__c} />
-            ))}
-          </Col>
-          <Col md="12" lg="4">
-            <Progress striped color="warning" value={25} />
-            <br />
-            {this.state.awards.map(elem => (
-              <AwardCard title={elem.name}
-                key={elem.id}
-                sender={elem.sender__r.Name}
-                receiver={elem.receiver__r.Name}
-                text={elem.comment__c} />
-            ))}
-          </Col>
-          <Col md="12" lg="4">
-            <Progress striped color="warning" value={55} />
-            <br />
-            {this.state.awards.map(elem => (
-              <AwardCard title={elem.name}
-                key={elem.id}
-                sender={elem.sender__r.Name}
-                receiver={elem.receiver__r.Name}
-                text={elem.comment__c} />
+            {this.state.improvements.map(elem => (
+              <IpCard1 key={elem.id}
+                type={elem.type__c}
+                // tiuser={elem.tiny_improvements_user__r.Name}
+                count={elem.count__c}
+                comment={elem.comment__c} />
             ))}
           </Col>
         </Row>
-      </Container>
+      </Container >
     )
   }
 }
